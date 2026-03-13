@@ -1,0 +1,25 @@
+[project]
+name = "stacks-prediction-market"
+description = "Decentralized prediction market on Stacks blockchain"
+authors = ["Solo Developer"]
+telemetry = false
+cache_dir = "./.cache"
+
+[contracts.prediction-market]
+path = "contracts/prediction-market.clar"
+clarity_version = 2
+epoch = "2.5"
+
+[contracts.oracle]
+path = "contracts/oracle.clar"
+clarity_version = 2
+epoch = "2.5"
+
+[contracts.market-token]
+path = "contracts/market-token.clar"
+clarity_version = 2
+epoch = "2.5"
+
+[repl]
+costs_version = 2
+parser_version = 2

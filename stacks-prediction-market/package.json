@@ -1,0 +1,20 @@
+{
+  "name": "stacks-prediction-market",
+  "version": "0.1.0",
+  "description": "Decentralized prediction market on the Stacks blockchain",
+  "private": true,
+  "scripts": {
+    "check": "clarinet check",
+    "test": "clarinet test",
+    "test:coverage": "clarinet test --coverage",
+    "dev": "cd frontend && npm run dev",
+    "build": "cd frontend && npm run build",
+    "install:frontend": "cd frontend && npm install",
+    "deploy:testnet": "bash scripts/deploy.sh testnet",
+    "deploy:mainnet": "bash scripts/deploy.sh mainnet",
+    "devnet:start": "clarinet devnet start",
+    "devnet:stop": "clarinet devnet stop"
+  },
+  "keywords": ["stacks", "blockchain", "prediction-market", "defi", "clarity"],
+  "license": "MIT"
+}
