@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "check": "clarinet check",
-    "test": "clarinet test",
+    "test": "vitest run",
     "test:coverage": "clarinet test --coverage",
     "dev": "cd frontend && npm run dev",
     "build": "cd frontend && npm run build",
@@ -15,6 +15,16 @@
     "devnet:start": "clarinet devnet start",
     "devnet:stop": "clarinet devnet stop"
   },
-  "keywords": ["stacks", "blockchain", "prediction-market", "defi", "clarity"],
-  "license": "MIT"
+  "keywords": [
+    "stacks",
+    "blockchain",
+    "prediction-market",
+    "defi",
+    "clarity"
+  ],
+  "license": "MIT",
+  "devDependencies": {
+    "@hirosystems/clarinet-sdk": "^3.8.1",
+    "vitest": "^4.1.0"
+  }
 }

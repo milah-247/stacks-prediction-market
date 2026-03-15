@@ -1,0 +1,14 @@
+[network]
+name = "simnet"
+
+[accounts.deployer]
+mnemonic = "test test test test test test test test test test test junk"
+balance = 100_000_000_000_000
+
+[accounts.wallet_1]
+mnemonic = "test test test test test test test test test test test junk"
+balance = 100_000_000_000_000
+
+[accounts.wallet_2]
+mnemonic = "test test test test test test test test test test test junk"
+balance = 100_000_000_000_000

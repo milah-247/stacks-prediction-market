@@ -39,7 +39,7 @@
     (asserts! (is-eq tx-sender sender) ERR-NOT-TOKEN-OWNER)
     (asserts! (> amount u0) ERR-INVALID-AMOUNT)
     (try! (ft-transfer? spm-token amount sender recipient))
-    (match memo m (print m) true)
+    (match memo m (begin (print m) true) true)
     (ok true)
   )
 )
