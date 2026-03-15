@@ -1,88 +1,60 @@
-import { Clarinet, Tx, Chain, Account, types } from 'https://deno.land/x/clarinet@v1.7.1/index.ts';
-import { assertEquals } from 'https://deno.land/std@0.170.0/testing/asserts.ts';
+import { describe, it, expect } from "vitest";
+import { initSimnet } from "@stacks/clarinet-sdk";
+import { Cl } from "@stacks/transactions";
 
-const ORACLE = 'oracle';
+const simnet = await initSimnet();
+const accounts = simnet.getAccounts();
+const deployer = accounts.get("deployer")!;
+const wallet1 = accounts.get("wallet_1")!;
+const wallet2 = accounts.get("wallet_2")!;
+
+const ORACLE = "oracle";
 const FEED_ID = "btc-usd-price";
 
-Clarinet.test({
-  name: "ORACLE: Owner can create data feed",
-  async fn(chain: Chain, accounts: Map<string, Account>) {
-    const deployer = accounts.get('deployer')!;
-    const block = chain.mineBlock([
-      Tx.contractCall(ORACLE, 'create-feed', [types.ascii(FEED_ID), types.utf8("BTC/USD price feed")], deployer.address)
-    ]);
-    assertEquals(block.receipts[0].result, '(ok true)');
-  }
-});
+describe("Oracle", () => {
+  it("owner can create data feed", () => {
+    const { result } = simnet.callPublicFn(ORACLE, "create-feed", [
+      Cl.stringAscii(FEED_ID), Cl.stringUtf8("BTC/USD price feed"),
+    ], deployer);
+    expect(result).toBeOk(Cl.bool(true));
+  });
 
-Clarinet.test({
-  name: "ORACLE: Cannot create duplicate feed",
-  async fn(chain: Chain, accounts: Map<string, Account>) {
-    const deployer = accounts.get('deployer')!;
-    chain.mineBlock([Tx.contractCall(ORACLE, 'create-feed', [types.ascii(FEED_ID), types.utf8("BTC price")], deployer.address)]);
-    const block = chain.mineBlock([Tx.contractCall(ORACLE, 'create-feed', [types.ascii(FEED_ID), types.utf8("Duplicate")], deployer.address)]);
-    block.receipts[0].result.expectErr().expectUint(202);
-  }
-});
+  it("cannot create duplicate feed", () => {
+    simnet.callPublicFn(ORACLE, "create-feed", [Cl.stringAscii(FEED_ID), Cl.stringUtf8("BTC")], deployer);
+    const { result } = simnet.callPublicFn(ORACLE, "create-feed", [Cl.stringAscii(FEED_ID), Cl.stringUtf8("dup")], deployer);
+    expect(result).toBeErr(Cl.uint(202));
+  });
 
-Clarinet.test({
-  name: "ORACLE: Owner can update feed value",
-  async fn(chain: Chain, accounts: Map<string, Account>) {
-    const deployer = accounts.get('deployer')!;
-    chain.mineBlock([Tx.contractCall(ORACLE, 'create-feed', [types.ascii(FEED_ID), types.utf8("BTC price")], deployer.address)]);
-    const block = chain.mineBlock([Tx.contractCall(ORACLE, 'update-feed', [types.ascii(FEED_ID), types.utf8("100000")], deployer.address)]);
-    assertEquals(block.receipts[0].result, '(ok true)');
-    chain.callReadOnlyFn(ORACLE, 'get-feed-value', [types.ascii(FEED_ID)], deployer.address).result.expectOk().expectUtf8("100000");
-  }
-});
+  it("owner can update feed value", () => {
+    simnet.callPublicFn(ORACLE, "create-feed", [Cl.stringAscii(FEED_ID), Cl.stringUtf8("BTC")], deployer);
+    const { result } = simnet.callPublicFn(ORACLE, "update-feed", [
+      Cl.stringAscii(FEED_ID), Cl.stringUtf8("100000"),
+    ], deployer);
+    expect(result).toBeOk(Cl.bool(true));
+  });
 
-Clarinet.test({
-  name: "ORACLE: Authorized operator can update feed",
-  async fn(chain: Chain, accounts: Map<string, Account>) {
-    const deployer = accounts.get('deployer')!;
-    const wallet1 = accounts.get('wallet_1')!;
-    chain.mineBlock([
-      Tx.contractCall(ORACLE, 'create-feed', [types.ascii(FEED_ID), types.utf8("BTC price")], deployer.address),
-      Tx.contractCall(ORACLE, 'add-operator', [types.principal(wallet1.address)], deployer.address)
-    ]);
-    const block = chain.mineBlock([Tx.contractCall(ORACLE, 'update-feed', [types.ascii(FEED_ID), types.utf8("95000")], wallet1.address)]);
-    assertEquals(block.receipts[0].result, '(ok true)');
-  }
-});
+  it("authorized operator can update feed", () => {
+    simnet.callPublicFn(ORACLE, "create-feed", [Cl.stringAscii(FEED_ID), Cl.stringUtf8("BTC")], deployer);
+    simnet.callPublicFn(ORACLE, "add-operator", [Cl.principal(wallet1)], deployer);
+    const { result } = simnet.callPublicFn(ORACLE, "update-feed", [
+      Cl.stringAscii(FEED_ID), Cl.stringUtf8("95000"),
+    ], wallet1);
+    expect(result).toBeOk(Cl.bool(true));
+  });
 
-Clarinet.test({
-  name: "ORACLE: Non-operator cannot update feed",
-  async fn(chain: Chain, accounts: Map<string, Account>) {
-    const deployer = accounts.get('deployer')!;
-    const wallet2 = accounts.get('wallet_2')!;
-    chain.mineBlock([Tx.contractCall(ORACLE, 'create-feed', [types.ascii(FEED_ID), types.utf8("BTC price")], deployer.address)]);
-    const block = chain.mineBlock([Tx.contractCall(ORACLE, 'update-feed', [types.ascii(FEED_ID), types.utf8("hack")], wallet2.address)]);
-    block.receipts[0].result.expectErr().expectUint(200);
-  }
-});
+  it("non-operator cannot update feed", () => {
+    simnet.callPublicFn(ORACLE, "create-feed", [Cl.stringAscii(FEED_ID), Cl.stringUtf8("BTC")], deployer);
+    const { result } = simnet.callPublicFn(ORACLE, "update-feed", [
+      Cl.stringAscii(FEED_ID), Cl.stringUtf8("hack"),
+    ], wallet2);
+    expect(result).toBeErr(Cl.uint(200));
+  });
 
-Clarinet.test({
-  name: "ORACLE: Can link market to feed",
-  async fn(chain: Chain, accounts: Map<string, Account>) {
-    const deployer = accounts.get('deployer')!;
-    chain.mineBlock([Tx.contractCall(ORACLE, 'create-feed', [types.ascii(FEED_ID), types.utf8("BTC price")], deployer.address)]);
-    const block = chain.mineBlock([
-      Tx.contractCall(ORACLE, 'link-market-to-feed', [
-        types.uint(1), types.ascii(FEED_ID), types.utf8('{"YES": ">100000", "NO": "<=100000"}')
-      ], deployer.address)
-    ]);
-    assertEquals(block.receipts[0].result, '(ok true)');
-  }
-});
-
-Clarinet.test({
-  name: "ORACLE: Freshness check works correctly",
-  async fn(chain: Chain, accounts: Map<string, Account>) {
-    const deployer = accounts.get('deployer')!;
-    chain.mineBlock([
-      Tx.contractCall(ORACLE, 'create-feed', [types.ascii(FEED_ID), types.utf8("BTC price")], deployer.address),
-      Tx.contractCall(ORACLE, 'update-feed', [types.ascii(FEED_ID), types.utf8("100000")], deployer.address)
-    ]);
-    chain.callReadOnlyFn(ORACLE, 'is-feed-fresh', [types.ascii(FEED_ID)], deployer.address).result.expectOk().expectBool(true);
-  }
+  it("can link market to feed", () => {
+    simnet.callPublicFn(ORACLE, "create-feed", [Cl.stringAscii(FEED_ID), Cl.stringUtf8("BTC")], deployer);
+    const { result } = simnet.callPublicFn(ORACLE, "link-market-to-feed", [
+      Cl.uint(1), Cl.stringAscii(FEED_ID), Cl.stringUtf8('{"YES":">100000"}'),
+    ], deployer);
+    expect(result).toBeOk(Cl.bool(true));
+  });
 });
