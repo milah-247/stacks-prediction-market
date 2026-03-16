@@ -1,0 +1,6 @@
+[network]
+name = "mainnet"
+
+[accounts.deployer]
+mnemonic = "test test test test test test test test test test test junk"
+balance = 0
