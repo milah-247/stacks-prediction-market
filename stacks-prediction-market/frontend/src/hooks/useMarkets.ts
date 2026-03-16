@@ -80,3 +80,66 @@ export function useCurrentBlock() {
   }, []);
   return currentBlock;
 }
+// Hook for fetching markets created by a specific user
+export function useUserCreatedMarkets(creatorAddress: string | null) {
+  const { markets, loading, error, refetch } = useMarkets();
+  const userMarkets = markets.filter(m => m.creator === creatorAddress);
+  return { markets: userMarkets, loading, error, refetch };
+}
+
+// Hook for fetching only active (unresolved, before deadline) markets
+export function useActiveMarkets() {
+  const { markets, loading, error, refetch } = useMarkets();
+  const currentBlock = useCurrentBlock();
+  const activeMarkets = markets.filter(m => 
+    !m.resolved && currentBlock < m.deadline
+  );
+  return { markets: activeMarkets, loading, error, refetch };
+}
+
+// Hook for fetching only resolved markets
+export function useResolvedMarkets() {
+  const { markets, loading, error, refetch } = useMarkets();
+  const resolvedMarkets = markets.filter(m => m.resolved);
+  return { markets: resolvedMarkets, loading, error, refetch };
+}
+```
+
+**Commit message:**
+```
+feat: add useUserCreatedMarkets, useActiveMarkets, and useResolvedMarkets hooks
+```
+
+**PR Title:**
+```
+feat: add filtered market hooks for user, active, and resolved markets
+```
+
+**PR Description:**
+```
+## Summary
+Adds three new custom React hooks that provide filtered views of market data 
+for common UI use cases.
+
+## New Hooks
+
+### `useUserCreatedMarkets(creatorAddress)`
+- Filters all markets to only those created by a specific address
+- Used on the dashboard to show markets the user has created
+- Returns same loading/error/refetch interface as useMarkets
+
+### `useActiveMarkets()`
+- Returns only markets that are unresolved and before their deadline
+- Uses useCurrentBlock() to determine active status in real time
+- Used for the Active filter tab on the market listing page
+
+### `useResolvedMarkets()`
+- Returns only markets where resolved is true
+- Used for the Resolved filter tab on the market listing page
+
+## Why
+These hooks reduce repeated filtering logic across multiple page components 
+and make the codebase easier to maintain.
+
+## Files Changed
+- `frontend/src/hooks/useMarkets.ts`
