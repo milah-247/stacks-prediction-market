@@ -161,3 +161,22 @@ export function getMarketStatus(market: Market, currentBlock: number): string {
   if (!isMarketBettingOpen(market, currentBlock)) return 'Betting Closed';
   return 'Active';
 }
+// Returns estimated payout multiplier for a given outcome
+export function getPayoutMultiplier(outcomePool: number, totalPool: number): string {
+  if (outcomePool === 0) return '∞';
+  const fee = totalPool * (CONTRACT_CONSTANTS.PLATFORM_FEE_BPS / CONTRACT_CONSTANTS.BPS_DENOMINATOR);
+  const distributable = totalPool - fee;
+  const multiplier = distributable / outcomePool;
+  return `${multiplier.toFixed(2)}x`;
+}
+
+// Returns true if market deadline has passed but market is not yet resolved
+export function isAwaitingResolution(market: Market, currentBlock: number): boolean {
+  return !market.resolved && currentBlock >= market.deadline;
+}
+
+// Returns the block number when betting closes (144 blocks before deadline)
+export function getBettingCutoffBlock(market: Market): number {
+  return market.deadline - CONTRACT_CONSTANTS.BETTING_CUTOFF_BLOCKS;
+}
+```
