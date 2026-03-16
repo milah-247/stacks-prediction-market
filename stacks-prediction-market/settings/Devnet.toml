@@ -1,3 +1,4 @@
+# Stacks Devnet configuration for local development
 [network]
 name = "devnet"
 
