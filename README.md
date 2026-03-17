@@ -1,70 +1,53 @@
-# Nova Rewards
+# Stack Predict
 
-**Nova Rewards** is a next-generation, blockchain-powered loyalty platform that enables businesses to reward users with tokenized incentives on the Stellar network.
+**Stack Predict** is a decentralized prediction market platform built on the Stacks blockchain. It allows users to create, participate in, and resolve prediction markets for events using Bitcoin via Stacks smart contracts (Clarity). 
 
-It transforms traditional reward systems into transparent, secure, and interoperable digital experiences.
-
----
-
-## Why Nova Rewards?
-
-Traditional loyalty programs are:
-- Fragmented  
-- Hard to manage  
-- Limited in value  
-
-**Nova Rewards fixes this by:**
-- Tokenizing rewards on-chain  
-- Giving users real ownership  
-- Enabling seamless redemption and transfer  
+Stack Predict enables secure, transparent, and trustless prediction markets where outcomes are verifiable on-chain.
 
 ---
 
-## Key Features
+## Overview
 
-### Tokenized Loyalty System
-Businesses can issue custom reward tokens that users truly own.
+Stack Predict brings trust and automation to prediction markets. Users can:
 
-### Blockchain Transparency
-All reward transactions are verifiable on-chain.
+- Create markets with conditions and stakes  
+- Participate by placing predictions  
+- Resolve markets via oracle or manual verification  
+- Collect payouts automatically from smart contracts  
 
-### Fast & Low-Cost Transactions
-Powered by Stellar for near-instant settlements.
-
-### Modular Architecture
-Easily adaptable for different industries and use cases.
-
-### Wallet Integration
-Users can store and manage rewards in their crypto wallets.
+All transactions, predictions, and payouts are recorded on-chain via Stacks, ensuring transparency and immutability.
 
 ---
 
-## Architecture
+## Features
 
-
-### Components:
-- **Frontend:** User dashboard & merchant interface  
-- **Backend:** Handles business logic & integrations  
-- **Smart Contracts:** Token issuance, rewards logic, redemption  
-
----
-
-## How It Works
-
-1. Merchant creates a reward campaign  
-2. User completes an action (purchase, referral, engagement)  
-3. Smart contract issues reward tokens  
-4. User stores tokens in wallet  
-5. Tokens are redeemed for perks or discounts  
+- **Market Creation:** Users can create prediction markets for events.  
+- **Prediction Participation:** Users place predictions by staking STX tokens.  
+- **On-chain Settlement:** Outcomes and payouts are handled automatically by Clarity smart contracts.  
+- **Oracle Integration:** Support for event outcome verification using reliable data sources.  
+- **User Dashboard:** Track active markets, predictions, and winnings.  
+- **Secure and Trustless:** Fully decentralized with transparent smart contracts.  
 
 ---
 
 ## Tech Stack
 
-- **Blockchain:** Stellar  
-- **Smart Contracts:** Soroban  
+- **Blockchain:** Stacks (on Bitcoin)  
+- **Smart Contracts:** Clarity  
 - **Frontend:** React / Next.js  
-- **Backend:** Node.js (optional)  
+- **Backend:** Node.js (optional for APIs and off-chain services)  
+- **Wallet Integration:** Hiro Wallet  
+
+---
+
+## System Architecture
+
+### Components:
+
+- **Frontend:** Interface for creating markets, placing predictions, and tracking outcomes  
+- **Backend (optional):** API for off-chain services, market data aggregation  
+- **Smart Contracts:** Core logic for market creation, prediction staking, and payouts  
+- **Wallet:** Hiro Wallet for signing transactions  
 
 ---
 
@@ -73,13 +56,13 @@ Users can store and manage rewards in their crypto wallets.
 ### Prerequisites
 
 - Node.js  
-- Stellar CLI / SDK  
-- Wallet (e.g., Freighter)
+- Stacks CLI & Clarity development environment  
+- Hiro Wallet extension  
 
 ### Installation
 
 ```bash
-git clone https://github.com/your-username/nova-rewards.git
-cd nova-rewards
+git clone https://github.com/your-username/stack-predict.git
+cd stack-predict
 npm install
 npm run dev
