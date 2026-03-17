@@ -1,6 +1,6 @@
-# Stack Predict
+# Stack Prediction market
 
-**Stack Predict** is a decentralized prediction market platform built on the Stacks blockchain. It allows users to create, participate in, and resolve prediction markets for events using Bitcoin via Stacks smart contracts (Clarity). 
+**Stack Predict market** is a decentralized prediction market platform built on the Stacks blockchain. It allows users to create, participate in, and resolve prediction markets for events using Bitcoin via Stacks smart contracts (Clarity). 
 
 Stack Predict enables secure, transparent, and trustless prediction markets where outcomes are verifiable on-chain.
 
