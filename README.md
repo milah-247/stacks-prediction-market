@@ -40,3 +40,46 @@ Users can store and manage rewards in their crypto wallets.
 ---
 
 ## Architecture
+
+
+### Components:
+- **Frontend:** User dashboard & merchant interface  
+- **Backend:** Handles business logic & integrations  
+- **Smart Contracts:** Token issuance, rewards logic, redemption  
+
+---
+
+## How It Works
+
+1. Merchant creates a reward campaign  
+2. User completes an action (purchase, referral, engagement)  
+3. Smart contract issues reward tokens  
+4. User stores tokens in wallet  
+5. Tokens are redeemed for perks or discounts  
+
+---
+
+## Tech Stack
+
+- **Blockchain:** Stellar  
+- **Smart Contracts:** Soroban  
+- **Frontend:** React / Next.js  
+- **Backend:** Node.js (optional)  
+
+---
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js  
+- Stellar CLI / SDK  
+- Wallet (e.g., Freighter)
+
+### Installation
+
+```bash
+git clone https://github.com/your-username/nova-rewards.git
+cd nova-rewards
+npm install
+npm run dev
