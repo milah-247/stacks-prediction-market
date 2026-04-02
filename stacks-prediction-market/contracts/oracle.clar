@@ -130,3 +130,23 @@
     (ok true)
   )
 )
+
+(define-public (deactivate-feed (feed-id (string-ascii 64)))
+  (let ((feed (unwrap! (map-get? data-feeds { feed-id: feed-id }) ERR-FEED-NOT-FOUND)))
+    (asserts! (is-eq tx-sender CONTRACT-OWNER) ERR-NOT-AUTHORIZED)
+    (map-set data-feeds { feed-id: feed-id } (merge feed { active: false }))
+    (print { event: "feed-deactivated", feed-id: feed-id })
+    (ok true)
+  )
+)
+
+(define-read-only (get-feed-history-entry (feed-id (string-ascii 64)) (slot uint))
+  (map-get? feed-history { feed-id: feed-id, slot: slot })
+)
+
+(define-read-only (is-operator-active (address principal))
+  (match (map-get? oracle-operators { operator: address })
+    op (and (get active op) true)
+    false
+  )
+)
