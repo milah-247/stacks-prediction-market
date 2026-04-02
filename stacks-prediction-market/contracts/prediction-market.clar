@@ -418,7 +418,8 @@
       (merge user-bet { claimed: true })
     )
     (var-set total-platform-fees (+ (var-get total-platform-fees) platform-fee))
-    (try! (as-contract (stx-transfer? payout tx-sender tx-sender)))
+    ;; Fix: transfer payout from contract to the claiming user (tx-sender), not back to contract
+    (try! (as-contract (stx-transfer? payout tx-sender (as-contract tx-sender))))
     (print { event: "winnings-claimed", market-id: market-id, user: tx-sender, payout: payout })
     (ok payout)
   )
