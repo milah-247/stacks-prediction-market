@@ -41,6 +41,8 @@
 (define-data-var oracle-principal principal CONTRACT-OWNER)
 (define-data-var total-platform-fees uint u0)
 (define-data-var paused bool false)
+(define-data-var reentrancy-lock bool false)
+
 
 ;; ---- Data Maps ----
 
@@ -177,6 +179,18 @@
     { market-id: market-id, outcome-index: index }
     { label: label, pool: u0 }
   )
+)
+
+
+(define-private (acquire-lock)
+  (if (var-get reentrancy-lock)
+    ERR-NOT-AUTHORIZED
+    (begin (var-set reentrancy-lock true) (ok true))
+  )
+)
+
+(define-private (release-lock)
+  (var-set reentrancy-lock false)
 )
 
 ;; ---- Admin Functions ----
