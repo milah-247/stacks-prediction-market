@@ -3,13 +3,15 @@ import { type Market, CONTRACT_CONSTANTS } from '../../utils/contracts';
 
 interface MarketTimerProps { market: Market; }
 
+// Fix: clamp negative countdown values to zero to prevent display overflow
 export function MarketTimer({ market }: MarketTimerProps) {
   const currentBlock = useCurrentBlock();
-  const blocksLeft = market.deadline - currentBlock;
+  // Clamp to 0 so negative values never reach the display layer
+  const blocksLeft = Math.max(0, market.deadline - currentBlock);
   const cutoffBlock = market.deadline - CONTRACT_CONSTANTS.BETTING_CUTOFF_BLOCKS;
   const bettingOpen = currentBlock < cutoffBlock;
-  const daysLeft = Math.max(0, Math.floor(blocksLeft / 144));
-  const hoursLeft = Math.max(0, Math.floor((blocksLeft % 144) / 6));
+  const daysLeft = Math.floor(blocksLeft / 144);
+  const hoursLeft = Math.floor((blocksLeft % 144) / 6);
   const blocksUntilCutoff = cutoffBlock - currentBlock;
 
   if (market.resolved) return (
