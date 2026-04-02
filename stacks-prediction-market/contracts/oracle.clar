@@ -130,3 +130,24 @@
     (ok true)
   )
 )
+
+;; ---- Optimization: Staleness Cache ----
+
+(define-map staleness-cache
+  { feed-id: (string-ascii 64) }
+  { last-checked: uint, was-fresh: bool }
+)
+
+(define-public (refresh-staleness-cache (feed-id (string-ascii 64)))
+  (let (
+    (feed (unwrap! (map-get? data-feeds { feed-id: feed-id }) ERR-FEED-NOT-FOUND))
+    (fresh (<= (- block-height (get updated-at feed)) MAX-STALENESS-BLOCKS))
+  )
+    (map-set staleness-cache { feed-id: feed-id } { last-checked: block-height, was-fresh: fresh })
+    (ok fresh)
+  )
+)
+
+(define-read-only (get-cached-staleness (feed-id (string-ascii 64)))
+  (map-get? staleness-cache { feed-id: feed-id })
+)
