@@ -489,3 +489,21 @@
     (ok true)
   )
 )
+
+;; ---- Optimization: Batch Claim Helper ----
+
+(define-read-only (get-claimable-markets (user principal) (market-id-a uint) (market-id-b uint) (market-id-c uint))
+  (list
+    (calculate-winnings market-id-a user)
+    (calculate-winnings market-id-b user)
+    (calculate-winnings market-id-c user)
+  )
+)
+
+(define-read-only (get-user-bet-count (market-id uint) (user principal))
+  (default-to { count: u0 } (map-get? user-market-bet-count { market-id: market-id, user: user }))
+)
+
+(define-read-only (get-dispute (market-id uint))
+  (map-get? disputes { market-id: market-id })
+)
