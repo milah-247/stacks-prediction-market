@@ -23,3 +23,13 @@ epoch = "2.5"
 [repl]
 costs_version = 2
 parser_version = 2
+
+[contracts.referral]
+path = "contracts/referral.clar"
+clarity_version = 2
+epoch = "2.5"
+
+[contracts.market-factory]
+path = "contracts/market-factory.clar"
+clarity_version = 2
+epoch = "2.5"
